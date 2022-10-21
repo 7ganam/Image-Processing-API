@@ -20,3 +20,8 @@ implementation for the first project in the advanced web development nano degree
 2. **Access the server from the browser.**
    For example by using the URL -> http://localhost:3000/api/image?filename=fjord.jpg&width=100&height=100
 3. **Try different file names and image sizes.**
+
+## Image folder locations
+
+The main images are located at /public/images .
+The created thumbnails are located at /public/images/thumbnails
