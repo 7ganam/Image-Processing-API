@@ -4,7 +4,8 @@ import config from '../config';
 
 const getImage = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
+  next: express.NextFunction
 ): Promise<void> => {
   const widthString = req.query?.width;
   const heightString = req.query?.height;
@@ -32,17 +33,23 @@ const getImage = async (
   const imageName = imageFileName.replace('.jpg', '');
   const imagePath = `${config.PROJECT_DIR}/../public/images/${imageFileName}`;
 
-  const result = await imgServices.getOrCreateImage(
-    imgServices.resizeAndSaveImage,
-    imagePath,
-    imageName,
-    {
-      width,
-      height
-    }
-  );
+  let result;
+  try {
+    result = await imgServices.getOrCreateImage(
+      imgServices.resizeAndSaveImage,
+      imagePath,
+      imageName,
+      {
+        width,
+        height
+      }
+    );
+  } catch (error) {
+    next(error);
+    return;
+  }
 
-  if (result.success && result.outputPath) {
+  if (result && result?.success && result?.outputPath) {
     res.status(200);
     res.send(`<img src="/images/thumbs/${imageName}-${width}-${height}.jpg">`); //<-- edited this line
   } else {

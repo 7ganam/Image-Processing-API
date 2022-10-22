@@ -10,4 +10,16 @@ app.listen(port, () => {
   console.log(`server started at localhost:${port}`);
 });
 
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): void => {
+    console.error(err?.message ?? 'can not find image');
+    res.status(500).send(err?.message ?? 'can not find image');
+  }
+);
+
 export default app;
