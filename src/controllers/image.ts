@@ -2,7 +2,10 @@ import express from 'express';
 import imgServices from '../services/image';
 import config from '../config';
 
-const getImage = async (req: express.Request, res: express.Response) => {
+const getImage = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
   const widthString = req.query?.width;
   const heightString = req.query?.height;
 
@@ -11,13 +14,15 @@ const getImage = async (req: express.Request, res: express.Response) => {
 
   if (Number.isNaN(width) || Number.isNaN(height)) {
     res.status(400);
-    return res.send('width and height must be numbers');
+    res.send('width and height must be numbers');
+    return;
   }
 
   const imageFileName = req.query?.filename as string;
   if (!width || !height || !imageFileName) {
     res.status(400);
-    return res.send('missing parameter');
+    res.send('missing parameter');
+    return;
   }
   if (!imageFileName.match(/.jpg/)) {
     res.status(400);
@@ -39,11 +44,11 @@ const getImage = async (req: express.Request, res: express.Response) => {
 
   if (result.success && result.outputPath) {
     res.status(200);
-    // return res.sendFile(path.resolve(result.outputPath))
     res.send(`<img src="/images/thumbs/${imageName}-${width}-${height}.jpg">`); //<-- edited this line
   } else {
     res.status(400);
-    return res.send('image not found');
+    res.send('image not found');
+    return;
   }
 };
 
